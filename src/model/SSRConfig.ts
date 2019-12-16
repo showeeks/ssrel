@@ -1,5 +1,3 @@
-import Base64 from 'urlsafe-base64'
-
 function generateID(): string {
     const seed = 'ABCDEF01234567890'
     const arr = new Array<String>();
@@ -11,7 +9,11 @@ function generateID(): string {
 
 
 const encode = (str: string): string => {
-    return Base64.encode(Buffer.from(str, 'utf-8'));
+    let buffer = new Buffer(str);
+    return buffer.toString("base64")
+        .replace("+", "-")
+        .replace("/","_")
+        .replace(/=+$/,'')
 };
 
 export default class SSRConfig {

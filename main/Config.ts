@@ -1,6 +1,6 @@
-import sqlite from 'sqlite'
-import axios from 'axios'
+import axios from 'axios';
 import SSRConfig from "./SSRConfig";
+import sqlite from 'sqlite';
 
 const SSR_URL = "https://www.kiwiss.cc/link/1p7FJThsG3EiCDWp";
 const GET_ALL_SQL = "SELECT remarks, server, server_port, method, obfs, obfsparam, password, protocol, enable FROM ssr_config";
@@ -17,6 +17,8 @@ function decode(str: string): string {
 
 export async function save(config) {
     try {
+        console.log(sqlite)
+        console.log(axios)
         const db = await sqlite.open("database/data.sqlite");
         const tblname = "ssr_config";
         const stmt = await db.prepare(`INSERT INTO ${tblname} (remarks, server, server_port, method, obfs, obfsparam, password, protocol, enable) values (?,?,?,?,?,?,?,?,?)`);

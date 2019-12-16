@@ -9,11 +9,14 @@
 //    "allowJs": true,
 //    "skipLibCheck": true,
 //    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
 //    "strict": true,
 //    "forceConsistentCasingInFileNames": true,
-//    "resolveJsonModule": true,
-//    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "isolatedModules": false,
 //    "noEmit": true
+    "paths": {
+      "*": ["../node_modules/*"]
+    }
   }
 }
