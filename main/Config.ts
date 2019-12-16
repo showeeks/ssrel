@@ -17,8 +17,6 @@ function decode(str: string): string {
 
 export async function save(config) {
     try {
-        console.log(sqlite)
-        console.log(axios)
         const db = await sqlite.open("database/data.sqlite");
         const tblname = "ssr_config";
         const stmt = await db.prepare(`INSERT INTO ${tblname} (remarks, server, server_port, method, obfs, obfsparam, password, protocol, enable) values (?,?,?,?,?,?,?,?,?)`);
@@ -103,10 +101,8 @@ export async function updateAll(): Promise<number> {
     const data = await axios.get(SSR_URL);
     let configs = fromSubscription(data.data);
     for (const config of configs) {
-        console.log(config)
         await save(config)
     }
-    console.log(configs.length)
     return configs.length
 }
 
