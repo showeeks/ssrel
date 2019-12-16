@@ -1,7 +1,9 @@
 import {app, BrowserWindow, ipcMain} from 'electron';
 import {fetchAll, updateAll} from "./Config";
 import SSRConfig from "./SSRConfig";
+import {rejects} from "assert";
 
+const socks5_https_client = require("socks5-https-client")
 const path = require('path');
 const url = require('url');
 
@@ -61,10 +63,24 @@ ipcMain.on('sub', (event, _) => {
     (async (): Promise<SSRConfig[]> => {
         console.log("subscribe1");
         await updateAll();
+        const resp = await new Promise((resolve, reject) => {
+            socks5_https_client.get({
+                hostname: 'www.google.com',
+                path: '/',
+                socksHost: '10.1.11.10', // Defaults to 'localhost'.
+                socksPort: 1086, // Defaults to 1080.
+            }, (res) => {
+                res.setEncoding("utf8");
+                res.on('readable', () => {
+                    resolve(res.read())
+                })
+            })
+        });
+        console.log(resp);
         return await fetchAll();
     })().then((configs: SSRConfig[]) => {
         console.log("sub3")
-        event.returnValue=configs
+        event.returnValue = configs
         // event.returnValue = configs
     });
     // // event.returnValue = "hello"
