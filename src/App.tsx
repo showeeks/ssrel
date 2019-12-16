@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import SSRConfig from "./model/SSRConfig";
-import {ipcRenderer} from 'electron'
+const electron = window.require("electron")
+const ipcRenderer = electron.ipcRenderer
 
 // import axios from 'axios'
 
