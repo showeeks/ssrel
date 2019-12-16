@@ -1,18 +1,21 @@
 import React, {useState} from 'react'
 import SSRConfig from "./model/SSRConfig";
-const electron = window.require("electron")
-const ipcRenderer = electron.ipcRenderer
+
+const electron = window.require("electron");
+const {send} = electron.ipcRenderer;
 
 // import axios from 'axios'
 
 function subscribe(setList) {
-    let sendSync = ipcRenderer.sendSync("subscribe");
-    console.log(sendSync)
-    setList(sendSync)
+    console.log("try to setLists")
+    send("sub", "ping");
+    electron.ipcRenderer.on("pub", (event, arg) => {
+        console.log(arg)
+    });
 }
 
 const App: React.FC = () => {
-    let [list, setList] = useState<SSRConfig[]>(new Array<SSRConfig>());
+    const [list, setList] = useState<SSRConfig[]>(new Array<SSRConfig>());
     const listItems = list.map((con: SSRConfig) => {
         return (<li>{con}</li>)
     });

@@ -1,5 +1,6 @@
 import {app, BrowserWindow, ipcMain} from 'electron';
 import {fetchAll, updateAll} from "./Config";
+import SSRConfig from "./SSRConfig";
 
 const path = require('path');
 const url = require('url');
@@ -13,7 +14,7 @@ function createWindow() {
     mainWindow = new BrowserWindow({width: 800, height: 600, webPreferences: {nodeIntegration: true}});
 
     // and load the index.html of the app.
-    const startUrl = process.env.ELECTRON_START_URL || url.format({
+    let startUrl = process.env.ELECTRON_START_URL || url.format({
         pathname: path.join(__dirname, '/../build/index.html'),
         protocol: 'file:',
         slashes: true
@@ -56,11 +57,18 @@ app.on('activate', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.on('subscribe', (event, arg) => {
-    (async () => {
-        await updateAll()
-        return await fetchAll();
-    })().then((configs) => {
-        event.returnValue = configs
-    })
-})
+ipcMain.on('sub', (event, _) => {
+    // (async (): Promise<SSRConfig[]> => {
+    //     console.log("subscribe1");
+    //     await updateAll();
+    //     return await fetchAll();
+    // })().then((configs: SSRConfig[]) => {
+    //     event.returnValue = configs
+    // });
+    console.log("hello")
+    let ar = new Array<SSRConfig>();
+    ar.push(new SSRConfig())
+    event.reply("pub", "hello sub")
+    // event.returnValue = "array"
+    console.log("subscribe2")
+});
