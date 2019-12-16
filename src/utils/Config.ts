@@ -4,6 +4,7 @@ import Base64 from 'urlsafe-base64'
 import axios from 'axios'
 
 const ssr_url = "https://www.kiwiss.cc/link/1p7FJThsG3EiCDWp"
+const getAllSql = "SELECT remarks, server, server_port, method, obfs, obfsparam, password, protocol, enable FROM ssr_config"
 
 export class Config {
     private server;
@@ -42,6 +43,22 @@ export class Config {
         })
     }
 
+    public fill(res: {
+        server, server_port, password, method, protocol, protocolparam, obfs, obfsparam, remarks, group
+    }): void {
+        this.server = res.server;
+        this.server_port = res.server_port
+        this.password = res.password
+        this.method = res.method
+        this.protocol = res.protocol
+        this.protocolparam = res.protocolparam
+        this.obfs = res.obfs
+        this.obfsparam = res.obfsparam
+        this.remarks = res.remarks
+        this.group = res.group
+        this.enable = true
+    }
+
     public async save() {
         try {
             const db = await sqlite.open("database/data.sqlite")
@@ -49,7 +66,7 @@ export class Config {
             const stmt = await db.prepare(`INSERT INTO ${tblname} (remarks, server, server_port, method, obfs, obfsparam, password, protocol, enable) values (?,?,?,?,?,?,?,?,?)`)
             await stmt.run(this.remarks, this.server, this.server_port, this.method, this.obfs, this.obfsparam, this.password, this.protocol, this.enable);
             await stmt.finalize()
-        } catch(e) {
+        } catch (e) {
             console.log("fatal: " + e)
         }
     }
@@ -135,8 +152,14 @@ export class Config {
         return configs.length
     }
 
-    public static fetchAll() {
-
+    public static async fetchAll(): Promise<Config[]> {
+        const db = await sqlite.open("database/data.sqlite")
+        const results = await db.all(getAllSql);
+        return results.map<Config>((result): Config => {
+            let res: Config = new Config();
+            res.fill(result);
+            return res
+        });
     }
 
     private static encode(str: string): string {

@@ -52,6 +52,13 @@ test('test save record to db', async () => {
     await fromSSRLink.res?.save()
 })
 
-test('fetch data from db', async() => {
-    const db = await sqlite.open("database/test.sqlite")
+test('fetch data from db', async () => {
+    const db = await sqlite.open("database/data.sqlite")
+    const results = await db.all("SELECT remarks, server, server_port, method, obfs, obfsparam, password, protocol, enable FROM ssr_config");
+    let configs = results.map<Config>((result): Config => {
+        let res: Config = new Config();
+        res.fill(result)
+        return res
+    });
+    console.log(configs)
 })
