@@ -1,5 +1,4 @@
 import sqlite from 'sqlite'
-import Base64 from 'urlsafe-base64'
 import axios from 'axios'
 import SSRConfig from "./SSRConfig";
 
@@ -7,7 +6,13 @@ const SSR_URL = "https://www.kiwiss.cc/link/1p7FJThsG3EiCDWp";
 const GET_ALL_SQL = "SELECT remarks, server, server_port, method, obfs, obfsparam, password, protocol, enable FROM ssr_config";
 
 function decode(str: string): string {
-    return Base64.decode(str).toString('utf-8')
+    // Add removed at end '='
+    str += Array(5 - str.length % 4).join('=');
+    str = str
+        .replace(/-/g, '+') // Convert '-' to '+'
+        .replace(/_/g, '/'); // Convert '_' to '/'
+    const buf = new Buffer(str, "base64");
+    return buf.toString("utf-8");
 }
 
 export async function save(config) {
@@ -26,19 +31,17 @@ function fromSubscription(subscription: string) {
     let ssrLinks = decode(subscription);
     const lines = ssrLinks.split("\n");
     const result = new Array<SSRConfig>();
-    console.log("debug: " + lines[5]);
     for (const line of lines) {
         if (line.length < 2) {
             continue
         }
         let {err, res} = fromSSRLink(line);
         if (err) {
-            console.log("warn: parse line " + line + " failed");
+            // console.log("warn: parse line " + line + " failed");
+            console.log(line)
             continue
         }
-        if (res instanceof SSRConfig) {
-            result.push(res)
-        }
+        result.push(res)
     }
     return result
 }
@@ -98,8 +101,10 @@ export async function updateAll(): Promise<number> {
     const data = await axios.get(SSR_URL);
     let configs = fromSubscription(data.data);
     for (const config of configs) {
+        console.log(config)
         await save(config)
     }
+    console.log(configs.length)
     return configs.length
 }
 

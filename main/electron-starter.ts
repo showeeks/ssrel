@@ -58,17 +58,19 @@ app.on('activate', function () {
 // code. You can also put them in separate files and require them here.
 
 ipcMain.on('sub', (event, _) => {
-    // (async (): Promise<SSRConfig[]> => {
-    //     console.log("subscribe1");
-    //     await updateAll();
-    //     return await fetchAll();
-    // })().then((configs: SSRConfig[]) => {
-    //     event.returnValue = configs
-    // });
-    console.log("hello")
+    (async (): Promise<SSRConfig[]> => {
+        console.log("subscribe1");
+        await updateAll();
+        return await fetchAll();
+    })().then((configs: SSRConfig[]) => {
+        console.log("sub3")
+        // event.returnValue = configs
+    });
+    // event.returnValue = "hello"
+    // console.log("hello")
     let ar = new Array<SSRConfig>();
     ar.push(new SSRConfig())
-    event.reply("pub", "hello sub")
-    // event.returnValue = "array"
-    console.log("subscribe2")
+    // event.reply("pub", "hello sub")
+    event.returnValue = ar
+    // console.log("subscribe2")
 });
