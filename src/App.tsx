@@ -1,5 +1,8 @@
 import React, {useState} from 'react'
 import SSRConfig from "./model/SSRConfig";
+import {Layout, Menu, Breadcrumb, Button} from "antd";
+
+const {Header, Content, Footer} = Layout
 
 const electron = window.require("electron");
 const {send, sendSync} = electron.ipcRenderer;
@@ -17,7 +20,7 @@ function subscribe(setList) {
     // });
 }
 
-const App: React.FC = () => {
+function ListSSRConfig() {
     const [list, setList] = useState<SSRConfig[]>(new Array<SSRConfig>());
     const listItems = list.map((con: SSRConfig) => {
         return (<li key={con.remarks}>
@@ -27,7 +30,7 @@ const App: React.FC = () => {
     return (
         <div>
             <p>
-                <button onClick={() => subscribe(setList)}>fetch all</button>
+                <Button onClick={() => subscribe(setList)}>fetch all</Button>
             </p>
             <p>Hello world!</p>
             <ul>
@@ -35,6 +38,39 @@ const App: React.FC = () => {
             </ul>
         </div>
     )
+}
+
+function MainLayout() {
+    return (<Layout className="layout">
+        <Header>
+            <div className="logo" />
+            <Menu
+                theme="dark"
+                mode="horizontal"
+                defaultSelectedKeys={['2']}
+                style={{ lineHeight: '64px' }}
+            >
+                <Menu.Item key="1">nav 1</Menu.Item>
+                <Menu.Item key="2">nav 2</Menu.Item>
+                <Menu.Item key="3">nav 3</Menu.Item>
+            </Menu>
+        </Header>
+        <Content style={{ padding: '0 50px' }}>
+            <Breadcrumb style={{ margin: '16px 0' }}>
+                <Breadcrumb.Item>Home</Breadcrumb.Item>
+                <Breadcrumb.Item>List</Breadcrumb.Item>
+                <Breadcrumb.Item>App</Breadcrumb.Item>
+            </Breadcrumb>
+            <div style={{ background: '#fff', padding: 24, minHeight: 280 }}><ListSSRConfig/></div>
+        </Content>
+        <Footer style={{ textAlign: 'center' }}>pdeantihuman ©2019 </Footer>
+    </Layout>)
+}
+
+
+
+const App: React.FC = () => {
+    return (<MainLayout/>)
 };
 
 export default App;

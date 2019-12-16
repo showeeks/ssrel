@@ -13,10 +13,7 @@
 //    "strict": true,
 //    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "isolatedModules": false,
+    "isolatedModules": false
 //    "noEmit": true
-    "paths": {
-      "*": ["../node_modules/*"]
-    }
   }
 }
