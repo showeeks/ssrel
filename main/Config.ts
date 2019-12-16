@@ -1,8 +1,7 @@
-import {generateID} from "./util";
 import sqlite from 'sqlite'
 import Base64 from 'urlsafe-base64'
 import axios from 'axios'
-import SSRConfig from "../model/SSRConfig";
+import SSRConfig from "./SSRConfig";
 
 const SSR_URL = "https://www.kiwiss.cc/link/1p7FJThsG3EiCDWp";
 const GET_ALL_SQL = "SELECT remarks, server, server_port, method, obfs, obfsparam, password, protocol, enable FROM ssr_config";
@@ -45,7 +44,6 @@ function fromSubscription(subscription: string) {
 }
 
 function fromSSRLink(link: string): { res: null; err: true } | { res: SSRConfig; err: false } {
-    const config = new SSRConfig()
     const res = new SSRConfig();
     const body = link.substr(6);
     const decoded = decode(body);
@@ -96,7 +94,7 @@ function fromSSRLink(link: string): { res: null; err: true } | { res: SSRConfig;
     }
 }
 
-async function updateAll() {
+export async function updateAll(): Promise<number> {
     const data = await axios.get(SSR_URL);
     let configs = fromSubscription(data.data);
     for (const config of configs) {
@@ -105,7 +103,7 @@ async function updateAll() {
     return configs.length
 }
 
-async function fetchAll(): Promise<SSRConfig[]> {
+export async function fetchAll(): Promise<SSRConfig[]> {
     const db = await sqlite.open("database/data.sqlite");
     const results = await db.all(GET_ALL_SQL);
     return results.map<SSRConfig>((result): SSRConfig => {
@@ -114,3 +112,6 @@ async function fetchAll(): Promise<SSRConfig[]> {
         return res
     });
 }
+
+// exports.fetchAll = fetchAll
+// exports.updateAll = updateAll()
