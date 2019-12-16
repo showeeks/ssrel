@@ -64,13 +64,14 @@ ipcMain.on('sub', (event, _) => {
         return await fetchAll();
     })().then((configs: SSRConfig[]) => {
         console.log("sub3")
+        event.returnValue=configs
         // event.returnValue = configs
     });
-    // event.returnValue = "hello"
-    // console.log("hello")
-    let ar = new Array<SSRConfig>();
-    ar.push(new SSRConfig())
-    // event.reply("pub", "hello sub")
-    event.returnValue = ar
-    // console.log("subscribe2")
+    // // event.returnValue = "hello"
+    // // console.log("hello")
+    // let ar = new Array<SSRConfig>();
+    // ar.push(new SSRConfig())
+    // // event.reply("pub", "hello sub")
+    // event.returnValue = ar
+    // // console.log("subscribe2")
 });

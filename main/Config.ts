@@ -19,7 +19,7 @@ export async function save(config) {
     try {
         const db = await sqlite.open("database/data.sqlite");
         const tblname = "ssr_config";
-        const stmt = await db.prepare(`INSERT INTO ${tblname} (remarks, server, server_port, method, obfs, obfsparam, password, protocol, enable) values (?,?,?,?,?,?,?,?,?)`);
+        const stmt = await db.prepare(`REPLACE INTO ${tblname} (remarks, server, server_port, method, obfs, obfsparam, password, protocol, enable) values (?,?,?,?,?,?,?,?,?)`);
         await stmt.run(config.remarks, config.server, config.server_port, config.method, config.obfs, config.obfsparam, config.password, config.protocol, config.enable);
         await stmt.finalize()
     } catch (e) {
