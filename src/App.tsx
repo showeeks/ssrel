@@ -19,9 +19,15 @@ function subscribe(setList) {
         return data
     });
     setList(sendSync1)
-    // electron.ipcRenderer.on("pub", (event, arg) => {
-    //     console.log(arg)
-    // });
+    electron.ipcRenderer.on("pub", (event, arg) => {
+        console.log(arg)
+    });
+    let myNotification = new Notification('标题',{
+        body: "正文"
+    });
+    myNotification.onclick = () => {
+        console.log("通知被点击")
+    }
 }
 
 function ListSSRConfig() {

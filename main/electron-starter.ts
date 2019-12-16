@@ -1,7 +1,6 @@
 import {app, BrowserWindow, ipcMain} from 'electron';
 import {fetchAll, updateAll} from "./Config";
 import SSRConfig from "./SSRConfig";
-import {rejects} from "assert";
 
 const socks5_https_client = require("socks5-https-client")
 const path = require('path');
